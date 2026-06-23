@@ -9,11 +9,11 @@
 
 class PluginUnreadTracking extends CommonDBTM
 {
-    public const RIGHTNAME = 'plugin_terracenter_unread_tracker_tracking';
+    public const RIGHTNAME = 'plugin_unreadtracker_tracking';
 
     public static function getTypeName($nb = 0)
     {
-        return _n('Unread Tracker', 'Unread Trackers', $nb, 'terracenter_unread_tracker');
+        return _n('Unread Tracker', 'Unread Trackers', $nb, 'unreadtracker');
     }
 
     public static function markAsRead($tickets_id, $users_id)
@@ -25,7 +25,7 @@ class PluginUnreadTracking extends CommonDBTM
         }
 
         $sql = "
-        INSERT INTO `glpi_plugin_terracenter_unread_tracker_read` (`tickets_id`, `users_id`, `date_read`)
+        INSERT INTO `glpi_plugin_unreadtracker_read` (`tickets_id`, `users_id`, `date_read`)
         VALUES ($tickets_id, $users_id, NOW())
         ON DUPLICATE KEY UPDATE `date_read` = NOW();
         ";
@@ -47,7 +47,7 @@ class PluginUnreadTracking extends CommonDBTM
         $sql = "
         SELECT 1
         FROM `glpi_tickets` t
-        LEFT JOIN `glpi_plugin_terracenter_unread_tracker_read` ur
+        LEFT JOIN `glpi_plugin_unreadtracker_read` ur
             ON ur.`tickets_id` = t.`id`
             AND ur.`users_id` = $users_id
         WHERE t.`id` = $tickets_id
@@ -71,7 +71,7 @@ class PluginUnreadTracking extends CommonDBTM
         $sql = "
         SELECT COUNT(DISTINCT t.`id`) as unread_count
         FROM `glpi_tickets` t
-        LEFT JOIN `glpi_plugin_terracenter_unread_tracker_read` ur
+        LEFT JOIN `glpi_plugin_unreadtracker_read` ur
             ON ur.`tickets_id` = t.`id`
             AND ur.`users_id` = $users_id
         WHERE (t.`assigned_to_supplier` = $users_id
