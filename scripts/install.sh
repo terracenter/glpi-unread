@@ -105,13 +105,13 @@ ok "PHP $PHP_VERSION cumple requisito (>= $PHP_MIN para GLPI ${GLPI_MAJOR}.x)"
 # ---------- Instalar o actualizar el plugin ----------
 if [[ -d "$PLUGIN_DIR/.git" ]]; then
     warn "Plugin ya existe en $PLUGIN_DIR — actualizando..."
-    git -C "$PLUGIN_DIR" fetch origin
-    git -C "$PLUGIN_DIR" checkout "$BRANCH"
-    git -C "$PLUGIN_DIR" pull origin "$BRANCH"
+    sudo -u "$WEB_USER" git -C "$PLUGIN_DIR" fetch origin
+    sudo -u "$WEB_USER" git -C "$PLUGIN_DIR" checkout "$BRANCH"
+    sudo -u "$WEB_USER" git -C "$PLUGIN_DIR" pull origin "$BRANCH"
     ok "Plugin actualizado a branch '$BRANCH'"
 else
     warn "Clonando plugin en $PLUGIN_DIR..."
-    git clone --branch "$BRANCH" --depth 1 "$REPO_URL" "$PLUGIN_DIR"
+    sudo -u "$WEB_USER" git clone --branch "$BRANCH" --depth 1 "$REPO_URL" "$PLUGIN_DIR"
     ok "Plugin clonado correctamente"
 fi
 
