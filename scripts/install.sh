@@ -11,7 +11,7 @@ WEB_USER="www-data"
 ADMIN_USER="glpi"
 BRANCH="main"
 REPO_URL="https://github.com/terracenter/glpi-unread.git"
-PLUGIN_NAME="terracenter_unread_tracker"
+PLUGIN_NAME="unreadtracker"
 PLUGINS_DIR=""   # vacío = auto-detectar (FHS: /var/lib/glpi/plugins o clásico: $GLPI_PATH/plugins)
 
 # ---------- Colores ----------
@@ -143,6 +143,6 @@ echo ""
 echo "========================================"
 ok "glpi-unread $BRANCH instalado y activo en GLPI $GLPI_VERSION"
 echo " Verifica en GLPI: Configuración → Plugins → Terracenter - Unread Tracker"
-echo " Tabla creada: glpi_plugin_terracenter_unread_tracker_read"
+echo " Tabla creada: glpi_plugin_unreadtracker_read"
 echo "========================================"
 echo ""
