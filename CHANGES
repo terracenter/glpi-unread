@@ -1,0 +1,16 @@
+Plugin Unread 1.0.0 (2026-06-23)
+=================================
+New Features:
+  * Rastreo de tickets no leídos por técnico en GLPI 10.x/11.x
+  * Tabla glpi_plugin_unread_read (id, tickets_id, users_id, date_read TIMESTAMP)
+    con índice composite idx_ticket_user para queries eficientes
+  * Clase PluginUnreadTracking extends CommonDBTM con métodos:
+    - markAsRead($tickets_id, $users_id): UPSERT de registro de lectura
+    - isUnread($tickets_id, $users_id): compara date_mod del ticket vs date_read
+    - getUnreadCountForUser($users_id): count de tickets no leídos asignados
+  * Instalador plugin_unread_install() via Migration class + $DB->queryOrDie()
+  * Desinstalador plugin_unread_uninstall() con DROP TABLE IF EXISTS
+  * Validación de prerrequisitos: PHP >= 8.0, GLPI 10.0–11.9
+
+Bug Fixes:
+  * (primera versión — no aplica)
