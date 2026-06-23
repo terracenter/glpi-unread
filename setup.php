@@ -16,9 +16,9 @@ function plugin_version_unread()
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/terracenter/glpi-unread',
         'minGlpiVersion' => '10.0',
-        'maxGlpiVersion' => '11.9',
         'requirements'   => [
-            'php' => '8.0',
+            'glpi' => ['min' => '10.0'],
+            'php'  => ['min' => '7.4'],
         ],
     ];
 }
@@ -32,19 +32,23 @@ function plugin_init_unread()
 
 function plugin_unread_check_prerequisites()
 {
-    // Check PHP version
-    if (version_compare(PHP_VERSION, '8.0', '<')) {
-        echo 'PHP 8.0 or higher is required';
+    $glpi_major = (int) explode('.', GLPI_VERSION)[0];
+
+    // GLPI 10.x: PHP >= 7.4 | GLPI 11.x: PHP >= 8.2 (fuente: glpi-install.readthedocs.io)
+    $php_min = ($glpi_major >= 11) ? '8.2' : '7.4';
+
+    if (version_compare(PHP_VERSION, $php_min, '<')) {
+        echo sprintf(
+            __('PHP %s o superior requerido para GLPI %s.x', 'unread'),
+            $php_min,
+            $glpi_major
+        );
         return false;
     }
 
-    // Check GLPI version if available
-    if (defined('GLPI_VERSION')) {
-        $glpiVersion = GLPI_VERSION;
-        if (version_compare($glpiVersion, '10.0', '<') || version_compare($glpiVersion, '11.9', '>')) {
-            echo 'GLPI version 10.0 to 11.9 is required';
-            return false;
-        }
+    if (!version_compare(GLPI_VERSION, '10.0', '>=')) {
+        echo __('Este plugin requiere GLPI 10.x o superior.', 'unread');
+        return false;
     }
 
     return true;
