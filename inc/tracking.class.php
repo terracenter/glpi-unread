@@ -9,7 +9,7 @@
 
 class PluginUnreadTracking extends CommonDBTM
 {
-    public const RIGHTNAME = 'plugin_unread_tracking';
+    public const RIGHTNAME = 'plugin_terracenter_unread_tracker_tracking';
 
     public static function getTypeName($nb = 0)
     {
