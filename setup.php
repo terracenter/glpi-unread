@@ -7,6 +7,8 @@
  * @author Freddy Taborda & Team
  */
 
+define('PLUGIN_UNREAD_VERSION', '1.0.0');
+
 function plugin_version_unread()
 {
     return [
