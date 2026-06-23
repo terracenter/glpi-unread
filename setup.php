@@ -27,8 +27,8 @@ function plugin_version_unread()
 
 function plugin_init_unread()
 {
-    // Plugin initialization hook
-    // Register core hooks and assets
+    global $PLUGIN_HOOKS;
+    $PLUGIN_HOOKS['csrf_compliant']['unread'] = true;
     return true;
 }
 
