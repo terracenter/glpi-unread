@@ -10,7 +10,7 @@ New Features:
     - getUnreadCountForUser($users_id): count de tickets no leídos asignados
   * Instalador plugin_unread_install() via Migration class + $DB->queryOrDie()
   * Desinstalador plugin_unread_uninstall() con DROP TABLE IF EXISTS
-  * Validación de prerrequisitos: PHP >= 8.0, GLPI 10.0–11.9
+  * Validación de prerrequisitos: GLPI 10.x (PHP >= 7.4) / GLPI 11.x (PHP >= 8.2)
 
 Bug Fixes:
   * (primera versión — no aplica)

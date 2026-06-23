@@ -2,7 +2,7 @@
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![GLPI Version](https://img.shields.io/badge/GLPI-10.x%20|%2011.x-green.svg)](https://glpi-project.org/)
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue.svg)](https://www.php.net/)
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B%20%2F%208.2%2B-blue.svg)](https://www.php.net/)
 [![Release](https://img.shields.io/badge/Release-1.0.0-brightgreen.svg)](CHANGES)
 
 Plugin para GLPI que implementa rastreo de tickets y actualizaciones **no leídas** por técnico.
@@ -17,15 +17,15 @@ respuesta en helpdesk.
 ✅ **Tabla de rastreo optimizada** — queries eficientes con índice composite  
 ✅ **Lógica temporal** — detecta actualizaciones no consultadas (`date_mod > date_read`)  
 ✅ **Contadores globales** — dashboard con cantidad de tickets pendientes por técnico  
-✅ **Compatible** — GLPI 10.x y 11.x, PHP 8.0+  
+✅ **Compatible** — GLPI 10.x (PHP 7.4+) y GLPI 11.x (PHP 8.2+)  
 ✅ **Ligero** — sin dependencias externas, solo BD nativa  
 
 ---
 
 ## 📋 Requisitos
 
-- **GLPI:** 10.0 — 11.9
-- **PHP:** 8.0 o superior
+- **GLPI:** 10.x — 11.x
+- **PHP:** 7.4 o superior (GLPI 10.x) / 8.2 o superior (GLPI 11.x)
 - **Base de Datos:** MariaDB / MySQL (compatible con esquema GLPI estándar)
 - **Acceso:** Rol administrador en GLPI para activación del plugin
 
