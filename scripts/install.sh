@@ -6,12 +6,13 @@
 set -euo pipefail
 
 # ---------- Valores por defecto ----------
-GLPI_PATH="/var/www/html/glpi"
+GLPI_PATH="/var/www/glpi"
 WEB_USER="www-data"
 ADMIN_USER="glpi"
 BRANCH="main"
 REPO_URL="https://github.com/terracenter/glpi-unread.git"
 PLUGIN_NAME="unread"
+PLUGINS_DIR=""   # vacío = auto-detectar (FHS: /var/lib/glpi/plugins o clásico: $GLPI_PATH/plugins)
 
 # ---------- Colores ----------
 RED='\033[0;31m'
@@ -29,15 +30,17 @@ while [[ $# -gt 0 ]]; do
         --glpi-path)   GLPI_PATH="$2";   shift 2 ;;
         --web-user)    WEB_USER="$2";    shift 2 ;;
         --admin-user)  ADMIN_USER="$2";  shift 2 ;;
-        --branch)      BRANCH="$2";      shift 2 ;;
+        --branch)       BRANCH="$2";       shift 2 ;;
+        --plugins-dir)  PLUGINS_DIR="$2";  shift 2 ;;
         --help|-h)
             echo "Uso: sudo $0 [opciones]"
             echo ""
             echo "Opciones:"
-            echo "  --glpi-path   <ruta>    Ruta de instalación GLPI (default: /var/www/html/glpi)"
+            echo "  --glpi-path   <ruta>    Ruta de instalación GLPI (default: /var/www/glpi)"
             echo "  --web-user    <usuario> Usuario del webserver (default: www-data)"
             echo "  --admin-user  <usuario> Usuario admin GLPI para CLI (default: glpi)"
             echo "  --branch      <rama>    Branch o tag del plugin a instalar (default: main)"
+            echo "  --plugins-dir <ruta>    Directorio de plugins GLPI (default: auto-detecta FHS)"
             echo ""
             exit 0
             ;;
@@ -45,13 +48,22 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-PLUGIN_DIR="$GLPI_PATH/plugins/$PLUGIN_NAME"
+# ---------- Auto-detectar directorio de plugins (FHS vs clásico) ----------
+if [[ -z "$PLUGINS_DIR" ]]; then
+    if [[ -d "/var/lib/glpi/plugins" ]]; then
+        PLUGINS_DIR="/var/lib/glpi/plugins"
+    else
+        PLUGINS_DIR="$GLPI_PATH/plugins"
+    fi
+fi
+PLUGIN_DIR="$PLUGINS_DIR/$PLUGIN_NAME"
 
 echo ""
 echo "========================================"
 echo " glpi-unread Installer"
 echo "========================================"
 echo " GLPI path   : $GLPI_PATH"
+echo " Plugins dir : $PLUGINS_DIR"
 echo " Web user    : $WEB_USER"
 echo " Admin user  : $ADMIN_USER"
 echo " Branch      : $BRANCH"
@@ -115,12 +127,12 @@ echo "Instalando plugin via GLPI CLI..."
 sudo -u "$WEB_USER" php "$GLPI_PATH/bin/console" glpi:plugin:install \
     --username="$ADMIN_USER" "$PLUGIN_NAME" \
     && ok "Plugin instalado (tabla BD creada)" \
-    || err "Error al instalar el plugin. Revisa: $GLPI_PATH/files/_log/php-errors.log"
+    || err "Error al instalar el plugin. Revisa: /var/log/glpi/php-errors.log"
 
 # ---------- Activar vía GLPI CLI ----------
 sudo -u "$WEB_USER" php "$GLPI_PATH/bin/console" glpi:plugin:activate "$PLUGIN_NAME" \
     && ok "Plugin activado correctamente" \
-    || err "Error al activar el plugin. Revisa: $GLPI_PATH/files/_log/php-errors.log"
+    || err "Error al activar el plugin. Revisa: /var/log/glpi/php-errors.log"
 
 # ---------- Resumen final ----------
 echo ""
