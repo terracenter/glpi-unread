@@ -31,6 +31,23 @@ respuesta en helpdesk.
 
 ---
 
+## ⚡ Instalación Rápida (Script Automático)
+
+```bash
+cd /tmp
+git clone https://github.com/terracenter/glpi-unread.git
+cd glpi-unread && chmod +x scripts/install.sh
+sudo ./scripts/install.sh --glpi-path /var/www/html/glpi --admin-user glpi
+```
+
+El script detecta la versión de GLPI automáticamente, valida los requisitos de PHP,
+instala el plugin y lo activa. No se requiere intervención manual en la UI de GLPI.
+
+> **Enterprise (licencia, soporte SLA, actualizaciones automáticas):**
+> Contactar [terracenter@gmail.com](mailto:terracenter@gmail.com)
+
+---
+
 ## 🚀 Instalación
 
 ### 1. Descargar el Plugin
