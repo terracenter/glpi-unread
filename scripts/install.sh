@@ -11,7 +11,7 @@ WEB_USER="www-data"
 ADMIN_USER="glpi"
 BRANCH="main"
 REPO_URL="https://github.com/terracenter/glpi-unread.git"
-PLUGIN_NAME="unread"
+PLUGIN_NAME="terracenter_unread_tracker"
 PLUGINS_DIR=""   # vacío = auto-detectar (FHS: /var/lib/glpi/plugins o clásico: $GLPI_PATH/plugins)
 
 # ---------- Colores ----------

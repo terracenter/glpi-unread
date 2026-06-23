@@ -7,12 +7,12 @@
  * @author Freddy Taborda & Team
  */
 
-define('PLUGIN_UNREAD_VERSION', '1.0.0');
+define('PLUGIN_TERRACENTER_UNREAD_TRACKER_VERSION', '1.0.0');
 
-function plugin_version_unread()
+function plugin_version_terracenter_unread_tracker()
 {
     return [
-        'name'           => 'Unread Tracker',
+        'name'           => 'Terracenter - Unread Tracker',
         'version'        => '1.0.0',
         'author'         => 'Freddy Taborda & Team',
         'license'        => 'GPLv3+',
@@ -25,14 +25,14 @@ function plugin_version_unread()
     ];
 }
 
-function plugin_init_unread()
+function plugin_init_terracenter_unread_tracker()
 {
     global $PLUGIN_HOOKS;
-    $PLUGIN_HOOKS['csrf_compliant']['unread'] = true;
+    $PLUGIN_HOOKS['csrf_compliant']['terracenter_unread_tracker'] = true;
     return true;
 }
 
-function plugin_unread_check_prerequisites()
+function plugin_terracenter_unread_tracker_check_prerequisites()
 {
     $glpi_major = (int) explode('.', GLPI_VERSION)[0];
 
@@ -41,7 +41,7 @@ function plugin_unread_check_prerequisites()
 
     if (version_compare(PHP_VERSION, $php_min, '<')) {
         echo sprintf(
-            __('PHP %s o superior requerido para GLPI %s.x', 'unread'),
+            __('PHP %s o superior requerido para GLPI %s.x', 'terracenter_unread_tracker'),
             $php_min,
             $glpi_major
         );
@@ -49,7 +49,7 @@ function plugin_unread_check_prerequisites()
     }
 
     if (!version_compare(GLPI_VERSION, '10.0', '>=')) {
-        echo __('Este plugin requiere GLPI 10.x o superior.', 'unread');
+        echo __('Este plugin requiere GLPI 10.x o superior.', 'terracenter_unread_tracker');
         return false;
     }
 
