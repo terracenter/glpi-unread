@@ -103,7 +103,9 @@ php -r "exit(version_compare(PHP_VERSION, '$PHP_MIN', '>=') ? 0 : 1);" || \
 ok "PHP $PHP_VERSION cumple requisito (>= $PHP_MIN para GLPI ${GLPI_MAJOR}.x)"
 
 # ---------- Instalar o actualizar el plugin ----------
+IS_UPDATE=false
 if [[ -d "$PLUGIN_DIR/.git" ]]; then
+    IS_UPDATE=true
     warn "Plugin ya existe en $PLUGIN_DIR — actualizando..."
     sudo -u "$WEB_USER" git -C "$PLUGIN_DIR" fetch origin
     sudo -u "$WEB_USER" git -C "$PLUGIN_DIR" checkout "$BRANCH"
@@ -124,9 +126,11 @@ ok "Permisos aplicados (owner: $WEB_USER, dirs: 755, files: 644)"
 # ---------- Instalar vía GLPI CLI ----------
 echo ""
 echo "Instalando plugin via GLPI CLI..."
+INSTALL_FLAGS="--username=$ADMIN_USER"
+[[ "$IS_UPDATE" == "true" ]] && INSTALL_FLAGS="$INSTALL_FLAGS --force"
 sudo -u "$WEB_USER" php "$GLPI_PATH/bin/console" glpi:plugin:install \
-    --username="$ADMIN_USER" "$PLUGIN_NAME" \
-    && ok "Plugin instalado (tabla BD creada)" \
+    $INSTALL_FLAGS "$PLUGIN_NAME" \
+    && ok "Plugin instalado/actualizado (tabla BD verificada)" \
     || err "Error al instalar el plugin. Revisa: /var/log/glpi/php-errors.log"
 
 # ---------- Activar vía GLPI CLI ----------
