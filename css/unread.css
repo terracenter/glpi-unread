@@ -1,0 +1,33 @@
+/* Badge rojo en el navbar */
+.unread-badge {
+    display: inline-block;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background-color: #d63939;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 18px;
+    border-radius: 9px;
+    text-align: center;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* Fila no leída en lista de tickets */
+.unread-row td {
+    background-color: rgba(214, 57, 57, 0.06) !important;
+    border-left: 3px solid #d63939;
+}
+
+/* Punto indicador pequeño */
+.unread-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #d63939;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+}

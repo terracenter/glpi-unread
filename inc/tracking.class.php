@@ -71,13 +71,14 @@ class PluginUnreadTracking extends CommonDBTM
         $sql = "
         SELECT COUNT(DISTINCT t.`id`) as unread_count
         FROM `glpi_tickets` t
+        INNER JOIN `glpi_tickets_users` tu
+            ON tu.`tickets_id` = t.`id`
+            AND tu.`users_id` = $users_id
+            AND tu.`type` = 2
         LEFT JOIN `glpi_plugin_unreadtracker_read` ur
             ON ur.`tickets_id` = t.`id`
             AND ur.`users_id` = $users_id
-        WHERE (t.`assigned_to_supplier` = $users_id
-               OR t.`assigned_to_contact` = $users_id
-               OR t.`users_id_assign` = $users_id)
-            AND (ur.`id` IS NULL OR t.`date_mod` > ur.`date_read`)
+        WHERE (ur.`id` IS NULL OR t.`date_mod` > ur.`date_read`)
         ;
         ";
 
@@ -86,15 +87,8 @@ class PluginUnreadTracking extends CommonDBTM
         return (int)($row['unread_count'] ?? 0);
     }
 
-    public function postItemUpdate($history = 1)
+    public static function displayCentral()
     {
-        // Stub: Hook for post-update actions
-        return true;
-    }
-
-    public function displayCentral()
-    {
-        // Stub: Central dashboard display hook
-        return true;
+        echo '<div id="unread-badge-container" style="display:inline;"></div>';
     }
 }

@@ -43,3 +43,22 @@ function plugin_unreadtracker_uninstall()
 
     return true;
 }
+
+function plugin_unreadtracker_item_update($item)
+{
+    global $DB;
+
+    if (!($item instanceof Ticket)) {
+        return;
+    }
+
+    $tickets_id = (int) $item->getID();
+    if ($tickets_id <= 0) {
+        return;
+    }
+
+    $DB->queryOrDie(
+        "DELETE FROM `glpi_plugin_unreadtracker_read` WHERE `tickets_id` = $tickets_id",
+        "Failed to invalidate unread tracking for ticket $tickets_id"
+    );
+}
