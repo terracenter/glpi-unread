@@ -17,15 +17,22 @@ function updateUnreadBadge() {
             const count = data.count || 0;
             let badge = document.getElementById('unread-count-badge');
 
-            // Find Tickets link in navbar
-            const ticketLinks = document.querySelectorAll('a[href*="ticket.php"], a[href*="Ticket"]');
+            // Find the dropdown-item for Tickets, then climb to the visible toggle button
+            const ticketItem = document.querySelector('a.dropdown-item[href*="ticket.php"]');
+            let insertTarget = null;
+            if (ticketItem) {
+                const menu = ticketItem.closest('.dropdown-menu');
+                insertTarget = (menu && menu.previousElementSibling) ? menu.previousElementSibling : ticketItem;
+            }
 
-            if (ticketLinks.length && count > 0) {
+            if (insertTarget && count > 0) {
                 if (!badge) {
                     badge = document.createElement('span');
                     badge.id = 'unread-count-badge';
                     badge.className = 'unread-badge';
-                    ticketLinks[0].appendChild(badge);
+                    insertTarget.appendChild(badge);
+                } else if (badge.parentElement !== insertTarget) {
+                    insertTarget.appendChild(badge);
                 }
                 badge.textContent = count;
                 badge.style.display = 'inline-block';
