@@ -29,7 +29,7 @@ if ($tickets_id <= 0) {
 
 $users_id = (int) $_SESSION['glpiID'];
 
-if (PluginUnreadTracking::markAsRead($tickets_id, $users_id)) {
+if (PluginUnreadtrackerTracking::markAsRead($tickets_id, $users_id)) {
     echo json_encode(['success' => true]);
 } else {
     http_response_code(500);
