@@ -29,7 +29,7 @@ function plugin_init_unreadtracker()
 {
     global $PLUGIN_HOOKS;
     $PLUGIN_HOOKS['csrf_compliant']['unreadtracker'] = true;
-    $PLUGIN_HOOKS['display_central']['unreadtracker'] = ['PluginUnreadTracking', 'displayCentral'];
+    $PLUGIN_HOOKS['display_central']['unreadtracker'] = ['PluginUnreadtrackerTracking', 'displayCentral'];
     $PLUGIN_HOOKS['item_update']['unreadtracker'] = ['Ticket' => 'plugin_unreadtracker_item_update'];
     $PLUGIN_HOOKS['add_css']['unreadtracker'] = 'css/unread.css';
     $PLUGIN_HOOKS['add_javascript']['unreadtracker'] = 'js/unread.js';

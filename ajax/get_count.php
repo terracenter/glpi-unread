@@ -9,6 +9,6 @@ Session::checkLoginUser();
 header('Content-Type: application/json');
 
 $users_id = (int) $_SESSION['glpiID'];
-$count = PluginUnreadTracking::getUnreadCountForUser($users_id);
+$count = PluginUnreadtrackerTracking::getUnreadCountForUser($users_id);
 
 echo json_encode(['count' => $count]);

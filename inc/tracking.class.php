@@ -7,7 +7,7 @@
  * @author Freddy Taborda & Team
  */
 
-class PluginUnreadTracking extends CommonDBTM
+class PluginUnreadtrackerTracking extends CommonDBTM
 {
     public const RIGHTNAME = 'plugin_unreadtracker_tracking';
 
