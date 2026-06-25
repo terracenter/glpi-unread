@@ -83,7 +83,7 @@ class PluginUnreadTracking extends CommonDBTM
         ";
 
         $result = $DB->query($sql);
-        $row = $DB->fetchRow($result);
+        $row = $DB->fetchAssoc($result);
         return (int)($row['unread_count'] ?? 0);
     }
 

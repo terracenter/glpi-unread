@@ -3,9 +3,15 @@
  * Badge polling, mark-as-read on ticket open, visual indicators in lists
  */
 
+// Resolve plugin base URL from the script tag src (handles any GLPI page depth)
+const _unreadPluginBase = (function() {
+    const s = document.querySelector('script[src*="unreadtracker/js/unread.js"]');
+    return s ? s.src.replace(/js\/unread\.js.*$/, '') : '/plugins/unreadtracker/';
+})();
+
 // Poll get_count.php and update badge in navbar
 function updateUnreadBadge() {
-    fetch('ajax/get_count.php')
+    fetch(_unreadPluginBase + 'ajax/get_count.php')
         .then(r => r.json())
         .then(data => {
             const count = data.count || 0;
@@ -45,7 +51,7 @@ function markCurrentTicketAsRead() {
     formData.append('tickets_id', ticketsId);
     formData.append('_glpi_csrf_token', csrfInput.value);
 
-    fetch('ajax/mark_read.php', { method: 'POST', body: formData })
+    fetch(_unreadPluginBase + 'ajax/mark_read.php', { method: 'POST', body: formData })
         .then(r => r.json())
         .then(data => {
             if (data.success) updateUnreadBadge();
@@ -57,7 +63,7 @@ function markCurrentTicketAsRead() {
 function markUnreadRows() {
     if (!window.location.href.match(/ticket\.php($|\?[^f])/)) return;
 
-    fetch('ajax/get_unread_ids.php')
+    fetch(_unreadPluginBase + 'ajax/get_unread_ids.php')
         .then(r => r.json())
         .then(data => {
             const ids = new Set(data.ids || []);
