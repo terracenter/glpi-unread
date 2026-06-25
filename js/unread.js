@@ -17,12 +17,14 @@ function updateUnreadBadge() {
             const count = data.count || 0;
             let badge = document.getElementById('unread-count-badge');
 
-            // Find the dropdown-item for Tickets, then climb to the visible toggle button
+            // Find the dropdown-item for Tickets, climb to li.nav-item, get the visible toggle
             const ticketItem = document.querySelector('a.dropdown-item[href*="ticket.php"]');
             let insertTarget = null;
             if (ticketItem) {
-                const menu = ticketItem.closest('.dropdown-menu');
-                insertTarget = (menu && menu.previousElementSibling) ? menu.previousElementSibling : ticketItem;
+                const navItem = ticketItem.closest('li.nav-item, li.dropdown');
+                insertTarget = navItem
+                    ? (navItem.querySelector('a.nav-link, a.dropdown-toggle') || ticketItem)
+                    : ticketItem;
             }
 
             if (insertTarget && count > 0) {

@@ -7,13 +7,13 @@
  * @author Freddy Taborda & Team
  */
 
-define('PLUGIN_UNREADTRACKER_VERSION', '1.0.0');
+define('PLUGIN_UNREADTRACKER_VERSION', '1.0.1');
 
 function plugin_version_unreadtracker()
 {
     return [
         'name'           => 'Terracenter - Unread Tracker',
-        'version'        => '1.0.0',
+        'version'        => '1.0.1',
         'author'         => 'Freddy Taborda & Team',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/terracenter/glpi-unread',
