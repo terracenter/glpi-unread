@@ -7,12 +7,11 @@
  * @author Freddy Taborda & Team
  */
 
+use GlpiPlugin\Unreadtracker\Tracking;
+
 function plugin_unreadtracker_install()
 {
     global $DB;
-
-    // Create table using Migration class for GLPI compatibility
-    $migration = new Migration(PLUGIN_UNREADTRACKER_VERSION);
 
     if (!$DB->tableExists('glpi_plugin_unreadtracker_read')) {
         $sql = "
@@ -21,10 +20,9 @@ function plugin_unreadtracker_install()
             `tickets_id` INT NOT NULL,
             `users_id` INT NOT NULL,
             `date_read` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            INDEX `idx_ticket_user` (`tickets_id`, `users_id`)
+            UNIQUE KEY `uniq_ticket_user` (`tickets_id`, `users_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
-
         $DB->queryOrDie($sql, "Failed to create glpi_plugin_unreadtracker_read table");
     }
 
@@ -35,10 +33,11 @@ function plugin_unreadtracker_uninstall()
 {
     global $DB;
 
-    // Drop the table if it exists
     if ($DB->tableExists('glpi_plugin_unreadtracker_read')) {
-        $sql = "DROP TABLE IF EXISTS `glpi_plugin_unreadtracker_read`;";
-        $DB->queryOrDie($sql, "Failed to drop glpi_plugin_unreadtracker_read table");
+        $DB->queryOrDie(
+            "DROP TABLE IF EXISTS `glpi_plugin_unreadtracker_read`",
+            "Failed to drop glpi_plugin_unreadtracker_read table"
+        );
     }
 
     return true;
@@ -57,8 +56,5 @@ function plugin_unreadtracker_item_update($item)
         return;
     }
 
-    $DB->queryOrDie(
-        "DELETE FROM `glpi_plugin_unreadtracker_read` WHERE `tickets_id` = $tickets_id",
-        "Failed to invalidate unread tracking for ticket $tickets_id"
-    );
+    $DB->delete(Tracking::getTable(), ['tickets_id' => $tickets_id]);
 }

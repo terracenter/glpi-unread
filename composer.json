@@ -1,0 +1,14 @@
+{
+    "name": "terracenter/glpi-unread",
+    "description": "Unread ticket tracker plugin for GLPI 10.x and 11.x",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "GlpiPlugin\\Unreadtracker\\": "src/"
+        }
+    }
+}

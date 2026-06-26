@@ -7,17 +7,19 @@
  * @author Freddy Taborda & Team
  */
 
-define('PLUGIN_UNREADTRACKER_VERSION', '1.0.1');
+use Glpi\Plugin\Hooks;
+use GlpiPlugin\Unreadtracker\Tracking;
+
+define('PLUGIN_UNREADTRACKER_VERSION', '1.1.0');
 
 function plugin_version_unreadtracker()
 {
     return [
         'name'           => 'Terracenter - Unread Tracker',
-        'version'        => '1.0.1',
+        'version'        => PLUGIN_UNREADTRACKER_VERSION,
         'author'         => 'Freddy Taborda & Team',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/terracenter/glpi-unread',
-        'minGlpiVersion' => '10.0',
         'requirements'   => [
             'glpi' => ['min' => '10.0'],
             'php'  => ['min' => '7.4'],
@@ -28,19 +30,19 @@ function plugin_version_unreadtracker()
 function plugin_init_unreadtracker()
 {
     global $PLUGIN_HOOKS;
-    $PLUGIN_HOOKS['csrf_compliant']['unreadtracker'] = true;
-    $PLUGIN_HOOKS['display_central']['unreadtracker'] = ['PluginUnreadtrackerTracking', 'displayCentral'];
-    $PLUGIN_HOOKS['item_update']['unreadtracker'] = ['Ticket' => 'plugin_unreadtracker_item_update'];
-    $PLUGIN_HOOKS['add_css']['unreadtracker'] = 'css/unread.css';
-    $PLUGIN_HOOKS['add_javascript']['unreadtracker'] = 'js/unread.js';
-    return true;
+
+    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['unreadtracker']  = true;
+    $PLUGIN_HOOKS[Hooks::DISPLAY_CENTRAL]['unreadtracker'] = [Tracking::class, 'displayCentral'];
+    $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['unreadtracker']     = ['Ticket' => 'plugin_unreadtracker_item_update'];
+    $PLUGIN_HOOKS[Hooks::ADD_CSS]['unreadtracker']         = 'css/unread.css';
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['unreadtracker']  = 'js/unread.js';
 }
 
 function plugin_unreadtracker_check_prerequisites()
 {
     $glpi_major = (int) explode('.', GLPI_VERSION)[0];
 
-    // GLPI 10.x: PHP >= 7.4 | GLPI 11.x: PHP >= 8.2 (fuente: glpi-install.readthedocs.io)
+    // GLPI 10.x: PHP >= 7.4 | GLPI 11.x: PHP >= 8.2
     $php_min = ($glpi_major >= 11) ? '8.2' : '7.4';
 
     if (version_compare(PHP_VERSION, $php_min, '<')) {
@@ -57,5 +59,10 @@ function plugin_unreadtracker_check_prerequisites()
         return false;
     }
 
+    return true;
+}
+
+function plugin_unreadtracker_check_config($verbose = false)
+{
     return true;
 }
