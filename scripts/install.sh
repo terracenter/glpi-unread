@@ -118,12 +118,18 @@ else
     ok "Plugin clonado correctamente"
 fi
 
-# ---------- Instalar dependencias Composer (genera autoloader PSR-4) ----------
+# ---------- Instalar dependencias Composer en /tmp (evita problemas de permisos) ----------
 echo ""
-echo "Generando autoloader Composer..."
-sudo -u "$WEB_USER" composer install --working-dir="$PLUGIN_DIR" --no-dev --optimize-autoloader --no-interaction \
-    && ok "Autoloader PSR-4 generado en $PLUGIN_DIR/vendor/" \
+echo "Generando autoloader Composer en /tmp..."
+TMP_BUILD="/tmp/${PLUGIN_NAME}-build"
+rm -rf "$TMP_BUILD"
+cp -r "$PLUGIN_DIR" "$TMP_BUILD"
+composer install --working-dir="$TMP_BUILD" --no-dev --optimize-autoloader --no-interaction \
+    && ok "Autoloader PSR-4 generado en $TMP_BUILD/vendor/" \
     || err "Error al ejecutar composer install. Revisa que Composer esté instalado."
+rsync -a "$TMP_BUILD/vendor/" "$PLUGIN_DIR/vendor/"
+rm -rf "$TMP_BUILD"
+ok "vendor/ copiado a $PLUGIN_DIR/vendor/"
 
 # ---------- Aplicar permisos ----------
 chown -R "$WEB_USER":"$WEB_USER" "$PLUGIN_DIR"
