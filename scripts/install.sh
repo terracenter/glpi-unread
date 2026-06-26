@@ -76,8 +76,9 @@ echo ""
 [[ -f "$GLPI_PATH/inc/based_config.php" ]] || \
     err "No se encontró GLPI en '$GLPI_PATH'. Verifica --glpi-path."
 
-command -v php  >/dev/null 2>&1 || err "PHP no está disponible en el PATH."
-command -v git  >/dev/null 2>&1 || err "Git no está disponible en el PATH."
+command -v php      >/dev/null 2>&1 || err "PHP no está disponible en el PATH."
+command -v git      >/dev/null 2>&1 || err "Git no está disponible en el PATH."
+command -v composer >/dev/null 2>&1 || err "Composer no está disponible en el PATH. Instalar: https://getcomposer.org"
 
 # ---------- Detectar versión GLPI ----------
 GLPI_VERSION=$(php -r "
@@ -116,6 +117,13 @@ else
     sudo -u "$WEB_USER" git clone --branch "$BRANCH" --depth 1 "$REPO_URL" "$PLUGIN_DIR"
     ok "Plugin clonado correctamente"
 fi
+
+# ---------- Instalar dependencias Composer (genera autoloader PSR-4) ----------
+echo ""
+echo "Generando autoloader Composer..."
+sudo -u "$WEB_USER" composer install --working-dir="$PLUGIN_DIR" --no-dev --optimize-autoloader --no-interaction \
+    && ok "Autoloader PSR-4 generado en $PLUGIN_DIR/vendor/" \
+    || err "Error al ejecutar composer install. Revisa que Composer esté instalado."
 
 # ---------- Aplicar permisos ----------
 chown -R "$WEB_USER":"$WEB_USER" "$PLUGIN_DIR"

@@ -8,6 +8,8 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 header('Content-Type: application/json');
 
+use GlpiPlugin\Unreadtracker\Tracking;
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
@@ -29,7 +31,7 @@ if ($tickets_id <= 0) {
 
 $users_id = (int) $_SESSION['glpiID'];
 
-if (PluginUnreadtrackerTracking::markAsRead($tickets_id, $users_id)) {
+if (Tracking::markAsRead($tickets_id, $users_id)) {
     echo json_encode(['success' => true]);
 } else {
     http_response_code(500);

@@ -8,7 +8,9 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 header('Content-Type: application/json');
 
+use GlpiPlugin\Unreadtracker\Tracking;
+
 $users_id = (int) $_SESSION['glpiID'];
-$count = PluginUnreadtrackerTracking::getUnreadCountForUser($users_id);
+$count = Tracking::getUnreadCountForUser($users_id);
 
 echo json_encode(['count' => $count]);
