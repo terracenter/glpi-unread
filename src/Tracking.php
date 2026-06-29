@@ -132,6 +132,83 @@ class Tracking extends CommonDBTM
         return $ids;
     }
 
+    public static function getUnreadStatsAndTickets(int $users_id): array
+    {
+        global $DB;
+
+        if (!$users_id) {
+            return [
+                'stats' => ['total' => 0, 'new' => 0, 'updated' => 0, 'overdue' => 0],
+                'tickets' => []
+            ];
+        }
+
+        $table = self::getTable();
+        $now = date('Y-m-d H:i:s');
+
+        $sql = "
+            SELECT DISTINCT t.`id`, t.`name`, t.`priority`, t.`date_mod`, t.`status`, t.`solve_delay_limit`, ur.`date_read`
+            FROM `glpi_tickets` t
+            INNER JOIN `glpi_tickets_users` tu
+                ON tu.`tickets_id` = t.`id`
+                AND tu.`users_id` = {$users_id}
+                AND tu.`type` = 2
+            LEFT JOIN `{$table}` ur
+                ON ur.`tickets_id` = t.`id`
+                AND ur.`users_id` = {$users_id}
+            WHERE t.`status` < 5 
+                AND (ur.`id` IS NULL OR t.`date_mod` > ur.`date_read`)
+            ORDER BY t.`priority` DESC, t.`date_mod` DESC
+        ";
+
+        $result = $DB->query($sql);
+        $tickets = [];
+        $stats = [
+            'total'   => 0,
+            'new'     => 0,
+            'updated' => 0,
+            'overdue' => 0
+        ];
+
+        while ($row = $DB->fetchAssoc($result)) {
+            $status = (int) $row['status'];
+            $priority = (int) $row['priority'];
+            
+            $is_new = ($status === 1);
+            $is_overdue = (!empty($row['solve_delay_limit']) && $row['solve_delay_limit'] < $now);
+            $is_updated = (!$is_new && !empty($row['date_read']) && $row['date_mod'] > $row['date_read']);
+
+            // Si es un ticket asignado no leído que no califica de nuevo ni actualizado, se cuenta como actualizado por defecto (acción pendiente)
+            if (!$is_new && !$is_updated) {
+                $is_updated = true;
+            }
+
+            $ticket_data = [
+                'id'                => (int) $row['id'],
+                'name'              => $row['name'],
+                'priority'          => $priority,
+                'date_mod'          => $row['date_mod'],
+                'status'            => $status,
+                'solve_delay_limit' => $row['solve_delay_limit'],
+                'is_new'            => $is_new,
+                'is_updated'        => $is_updated,
+                'is_overdue'        => $is_overdue
+            ];
+
+            $tickets[] = $ticket_data;
+            
+            $stats['total']++;
+            if ($is_new) $stats['new']++;
+            if ($is_updated) $stats['updated']++;
+            if ($is_overdue) $stats['overdue']++;
+        }
+
+        return [
+            'stats'   => $stats,
+            'tickets' => $tickets
+        ];
+    }
+
     public static function displayCentral(): void
     {
         echo '<div id="unread-badge-container" style="display:inline;"></div>';

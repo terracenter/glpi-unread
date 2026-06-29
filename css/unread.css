@@ -1,33 +1,185 @@
-/* Badge rojo en el navbar */
+/* Badge general de notificaciones */
 .unread-badge {
     display: inline-block;
     min-width: 18px;
     height: 18px;
-    padding: 0 4px;
-    background-color: #d63939;
+    padding: 0 5px;
     color: #fff;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     line-height: 18px;
     border-radius: 9px;
     text-align: center;
-    margin-left: 4px;
-    vertical-align: middle;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    box-shadow: 0 0 0 2px #fff;
+    transition: background-color 0.3s ease;
 }
 
-/* Fila no leída en lista de tickets */
+/* Colores de prioridad para el badge general y puntos */
+.bg-priority-6 { background-color: #d63939 !important; } /* Major - Red */
+.bg-priority-5 { background-color: #f76707 !important; } /* Very High - Dark Orange */
+.bg-priority-4 { background-color: #f59f00 !important; } /* High - Orange/Yellow */
+.bg-priority-3 { background-color: #206bc4 !important; } /* Medium - Blue */
+.bg-priority-2 { background-color: #17a2b8 !important; } /* Low - Cyan */
+.bg-priority-1 { background-color: #6c757d !important; } /* Very Low - Grey */
+
+/* Fila no leída en la tabla de tickets */
 .unread-row td {
-    background-color: rgba(214, 57, 57, 0.06) !important;
+    background-color: rgba(214, 57, 57, 0.05) !important;
     border-left: 3px solid #d63939;
+    font-weight: 600;
 }
 
-/* Punto indicador pequeño */
+/* Punto indicador de prioridad */
 .unread-dot {
     display: inline-block;
     width: 8px;
     height: 8px;
-    background-color: #d63939;
     border-radius: 50%;
-    margin-right: 4px;
+    margin-right: 6px;
     vertical-align: middle;
+}
+
+/* Odoo-like Notification Menu Styling */
+.unread-notification-dropdown {
+    width: 360px !important;
+    max-height: 480px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
+    border: 1px solid rgba(0,0,0,.15) !important;
+    overflow: hidden;
+}
+
+.unread-notification-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 13px;
+}
+
+/* Barra de Filtros Estilo Odoo */
+.unread-notification-filters {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.unread-notification-filter-btn {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #868e96;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.unread-notification-filter-btn:hover {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+
+.unread-notification-filter-btn.active {
+    background-color: #e8f0fe;
+    color: #206bc4;
+}
+
+.unread-notification-filter-btn .badge {
+    margin-left: 6px;
+    font-size: 9px;
+    padding: 2px 5px;
+}
+
+.unread-notification-list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.unread-notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f3f5;
+    text-decoration: none !important;
+    color: #495057 !important;
+    transition: background-color 0.2s ease;
+}
+
+.unread-notification-item:hover {
+    background-color: #f1f3f5;
+}
+
+.unread-notification-icon-wrapper {
+    margin-right: 12px;
+    color: #868e96;
+    margin-top: 2px;
+}
+
+.unread-notification-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.unread-notification-title {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unread-notification-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #868e96;
+}
+
+.unread-notification-overdue-warning {
+    color: #d63939;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.unread-notification-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+.unread-notification-footer a {
+    color: #206bc4;
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.unread-notification-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Animación de alerta pulsante */
+@keyframes pulse-ring {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(214, 57, 57, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(214, 57, 57, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(214, 57, 57, 0); }
+}
+.unread-badge-pulse {
+    animation: pulse-ring 2s infinite;
 }

@@ -1,3 +1,20 @@
+Plugin Unread 1.2.0 (2026-06-29)
+=================================
+New Features:
+  * Inyección dinámica de menú Systray (Campana de Notificaciones) estilo Odoo en la barra superior.
+  * Filtros en caliente en el dropdown (Todos, Nuevos, Actualizados, Retrasados) sin recarga de página.
+  * Colores de prioridad en el badge principal y dots en el listado de tickets.
+  * Efecto pulsante en el badge cuando hay notificaciones de prioridad crítica (Mayor / Muy Alta).
+  * Soporte de fecha de vencimiento (SLA / solve_delay_limit) para la categorización de tickets retrasados.
+  * Nuevo endpoint AJAX ajax/get_unread_details.php.
+
+Plugin Unread 1.1.0 (2026-06-26)
+=================================
+New Features:
+  * Migración estructural a clases con namespaces PSR-4 nativos (GlpiPlugin\Unreadtracker).
+  * Incorporación de composer.json para soporte de estándares locales de desarrollo (PHPCS, linter).
+  * Soporte de desinstalación e instalación completa por CLI con glpi:plugin.
+
 Plugin Unread 1.0.0 (2026-06-23)
 =================================
 New Features:
