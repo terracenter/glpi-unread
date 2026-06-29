@@ -3,22 +3,25 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![GLPI Version](https://img.shields.io/badge/GLPI-10.x%20|%2011.x-green.svg)](https://glpi-project.org/)
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B%20%2F%208.2%2B-blue.svg)](https://www.php.net/)
-[![Release](https://img.shields.io/badge/Release-1.0.0-brightgreen.svg)](CHANGES)
+[![Release](https://img.shields.io/badge/Release-1.2.0-brightgreen.svg)](CHANGES)
 
-Plugin para GLPI que implementa rastreo de tickets y actualizaciones **no leídas** por técnico.
-Mejora la visibilidad operacional, reduce el riesgo de tickets olvidados y acelera el ciclo de
-respuesta en helpdesk.
+Plugin para GLPI que implementa un **centro de notificaciones estilo Odoo** y rastreo de tickets **no leídos, actualizados y retrasados** con clasificación visual según la prioridad del ticket.
+
+Mejora la visibilidad operacional, reduce el riesgo de tickets olvidados y acelera el ciclo de respuesta en helpdesk.
 
 ---
 
 ## 🎯 Características Principales
 
-✅ **Rastreo automático** — marca tickets como leídos/no leídos por usuario  
-✅ **Tabla de rastreo optimizada** — queries eficientes con índice composite  
-✅ **Lógica temporal** — detecta actualizaciones no consultadas (`date_mod > date_read`)  
-✅ **Contadores globales** — dashboard con cantidad de tickets pendientes por técnico  
-✅ **Compatible** — GLPI 10.x (PHP 7.4+) y GLPI 11.x (PHP 8.2+)  
-✅ **Ligero** — sin dependencias externas, solo BD nativa  
+* 🔔 **Centro de notificaciones Systray (Estilo Odoo)**: Un único ícono de campana interactivo integrado de forma nativa en la barra superior de GLPI.
+* 🚦 **Badge reactivo de prioridad**: El badge del ícono de la campana cambia de color según la prioridad del ticket más urgente pendiente de atención (Rojo parpadeante para críticos/mayores, Naranja para altos, Azul para medios).
+* 📊 **Filtros rápidos e inteligentes**: El menú desplegable permite ver en tiempo real el desglose de:
+  * **Todos**: Todos los tickets no leídos o modificados asignados.
+  * **Nuevos**: Tickets en estado *Nuevo* (`status: 1`).
+  * **Actualizados**: Tickets que ya habías leído pero que han recibido nuevos comentarios, seguimientos o cambios.
+  * **Retrasados (SLA)**: Tickets activos cuya fecha límite de resolución (`solve_delay_limit`) ha expirado.
+* ⚡ **Carga ultrarrápida (Cache en cliente)**: Carga instantánea de filtros locales sin necesidad de realizar múltiples consultas AJAX de fondo.
+* 🛡️ **Autoloading Nativo**: Cumple estrictamente con el estándar PSR-4 de GLPI 10+; las clases se autocargan desde `src/` sin requerir composer ni dependencias de terceros en producción.
 
 ---
 
@@ -27,107 +30,79 @@ respuesta en helpdesk.
 - **GLPI:** 10.x — 11.x
 - **PHP:** 7.4 o superior (GLPI 10.x) / 8.2 o superior (GLPI 11.x)
 - **Base de Datos:** MariaDB / MySQL (compatible con esquema GLPI estándar)
-- **Acceso:** Rol administrador en GLPI para activación del plugin
 
 ---
 
-## ⚡ Instalación Rápida (Script Automático)
+## 🚀 Despliegue en el Servidor (Regla /tmp)
+
+Para garantizar un despliegue limpio y evitar bloqueos de archivos en producción, el proceso de build se realiza siempre en `/tmp` del servidor remoto:
 
 ```bash
-cd /tmp
-git clone https://github.com/terracenter/glpi-unread.git
-cd glpi-unread && chmod +x scripts/install.sh
-sudo ./scripts/install.sh --glpi-path /var/www/glpi --admin-user glpi
+# 1. Clonar o actualizar el repositorio en /tmp
+git clone https://github.com/terracenter/glpi-unread.git /tmp/unreadtracker
+
+# 2. Empaquetar el build (excluyendo git y dependencias de desarrollo)
+tar -czf /tmp/unreadtracker.tar.gz -C /tmp/unreadtracker --exclude='.git' --exclude='composer.json' .
+
+# 3. Limpiar carpeta de producción e instalar
+sudo rm -rf /var/www/glpi/plugins/unreadtracker
+sudo mkdir -p /var/www/glpi/plugins/unreadtracker
+sudo tar -xzf /tmp/unreadtracker.tar.gz -C /var/www/glpi/plugins/unreadtracker/
+sudo chown -R www-data:www-data /var/www/glpi/plugins/unreadtracker/
+
+# 4. Instalar y activar vía CLI en la raíz de GLPI
+sudo -u www-data php /var/www/glpi/bin/console glpi:plugin:install unreadtracker
+sudo -u www-data php /var/www/glpi/bin/console glpi:plugin:activate unreadtracker
 ```
-
-El script detecta la versión de GLPI automáticamente, valida los requisitos de PHP,
-instala el plugin y lo activa. No se requiere intervención manual en la UI de GLPI.
-
-> **Enterprise (licencia, soporte SLA, actualizaciones automáticas):**
-> Contactar [terracenter@gmail.com](mailto:terracenter@gmail.com)
 
 ---
 
-## 🚀 Instalación
+## 📖 Uso y API Interna
 
-### 1. Descargar el Plugin
-
-```bash
-# Opción A: Clonar desde GitHub
-cd /var/www/html/glpi/plugins/
-git clone git@github.com:terracenter/glpi-unread.git unread
-
-# Opción B: Descargar ZIP y extraer
-unzip glpi-unread-main.zip
-mv glpi-unread-main /var/www/html/glpi/plugins/unread
-```
-
-### 2. Permisos
-
-```bash
-cd /var/www/html/glpi/plugins/unread
-sudo chown -R www-data:www-data .
-sudo chmod -R 755 .
-```
-
-### 3. Activar en GLPI
-
-1. Acceder a GLPI como administrador
-2. Ir a **Configuración** → **Plugins**
-3. Buscar **"Unread Tracker"**
-4. Hacer clic en **Activar**
-5. Verificar que la tabla `glpi_plugin_unread_read` se crea automáticamente
-
----
-
-## 📖 Uso
+El plugin proporciona la clase `GlpiPlugin\Unreadtracker\Tracking` para interactuar con el motor de estados:
 
 ### Marcar Ticket como Leído
-
-Una vez activado, el plugin proporciona métodos en la clase `PluginUnreadTracking`:
-
 ```php
-// Marcar un ticket como leído por un usuario
-PluginUnreadTracking::markAsRead(
+use GlpiPlugin\Unreadtracker\Tracking;
+
+// Marca un ticket como leído por el técnico
+Tracking::markAsRead(
     $tickets_id = 123,  // ID del ticket
     $users_id = 45      // ID del usuario técnico
 );
 ```
 
-### Verificar si un Ticket está No Leído
-
+### Verificar si un Ticket tiene actualizaciones pendientes
 ```php
-// Retorna true si el ticket tiene actualizaciones no vistas
-if (PluginUnreadTracking::isUnread($tickets_id, $users_id)) {
-    echo "📌 Este ticket tiene cambios no consultados";
+if (Tracking::isUnread($tickets_id, $users_id)) {
+    echo "📌 El ticket tiene cambios o respuestas pendientes";
 }
 ```
 
-### Contar Tickets No Leídos por Usuario
-
+### Obtener Estadísticas y Listado Unificado
 ```php
-// Obtener cantidad de tickets no leídos asignados al técnico
-$unread_count = PluginUnreadTracking::getUnreadCountForUser($users_id);
-echo "Tienes $unread_count tickets pendientes de revisar";
+$data = Tracking::getUnreadStatsAndTickets($users_id);
+// Retorna: ['stats' => ['total' => X, 'new' => Y, 'updated' => Z, 'overdue' => W], 'tickets' => [...]]
 ```
 
 ---
 
-## 🔧 Desarrollo y Fases Futuras
+## 🔧 Fases de Desarrollo
 
 | Fase | Estado | Descripción |
 |------|--------|-------------|
 | **1. Scaffolding** | ✅ Completa | Setup inicial, instalador, clase base |
-| **2. Frontend** | 🔄 Próxima | Dashboard de contadores, UI de badges, AJAX |
-| **3. Integraciones** | 📅 Planificada | Notificaciones email, webhooks, API REST |
-| **4. Optimizaciones** | 📅 Planificada | Caché de contadores, bulk operations |
+| **2. Frontend & Notificaciones** | ✅ Completa | Menú Systray estilo Odoo, filtros locales, colores de prioridad, SLA |
+| **3. Integraciones** | 📅 Planificada | Notificaciones email en lote, webhooks, soporte API REST adicional |
 
 ---
 
 ## 📊 Esquema de Base de Datos
 
+El plugin crea de forma automática la siguiente tabla al activarse:
+
 ```sql
-CREATE TABLE `glpi_plugin_unread_read` (
+CREATE TABLE `glpi_plugin_unreadtracker_read` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `tickets_id` INT NOT NULL,
     `users_id` INT NOT NULL,
@@ -141,61 +116,10 @@ CREATE TABLE `glpi_plugin_unread_read` (
 
 ## 📜 Licencia
 
-Este plugin se distribuye bajo **dos modelos de licencia**:
-
-### Community Edition (AGPL-3.0)
-- **Gratis** para uso en organizaciones pequeñas y startups
-- Código abierto: toda mejora debe ser compartida
-- Soporte comunitario vía issues de GitHub
-- Ver archivo [LICENSE](LICENSE) para detalles completos
-
-### Enterprise Edition
-- **Licencia comercial propietaria**
-- Sin obligación AGPL
-- Soporte prioritario y SLA garantizado
-- Implementación personalizada e integraciones
-
-📧 **Para consultar sobre licencia Enterprise:** [terracenter@gmail.com](mailto:terracenter@gmail.com)
-
----
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas bajo la licencia AGPL-3.0.
-
-1. Fork el repositorio
-2. Crear rama `dev-tu-feature`
-3. Hacer commits con formato: `feat(modulo): descripción`
-4. Abrir Pull Request a `dev`
-5. Validación y merge a `main` con versionado Asterisk
-
-Ver [`CHANGES`](CHANGES) para historial de versiones.
-
----
-
-## 🆘 Soporte
-
-| Canal | Descripción |
-|-------|-------------|
-| **Issues** | Bugs y features (comunitario) |
-| **Email** | terracenter@gmail.com (consultas comerciales) |
-| **SLA** | Enterprise: respuesta en <24h |
-
----
-
-## 📝 Changelog
-
-Ver archivo [`CHANGES`](CHANGES) para resumen completo de versiones.
-
-**Versión actual:** 1.0.0 (2026-06-23)
+Ver archivo [LICENSE](LICENSE) (Community AGPL-3.0 / Enterprise Comercial).
 
 ---
 
 ## 🏢 Sobre Humanbyte
 
-Desarrollado por **Freddy Taborda** bajo [Humanbyte](https://humanbyte.io).
-Especialistas en infraestructura, automation y plugins empresariales GLPI/ISP.
-
----
-
-**¿Dudas? Abre un [issue](https://github.com/terracenter/glpi-unread/issues) o contacta directamente.**
+Desarrollado por **Freddy Taborda** bajo [Humanbyte](https://humanbyte.io). Especialistas en infraestructura, automatización de red e integraciones avanzadas GLPI/ISP.
