@@ -14,6 +14,7 @@ Este es el repositorio de desarrollo del plugin de GLPI compatible con las versi
 ## 🌐 Configuración del Entorno de Pruebas
 - **Instancia de GLPI:** `https://glpi-10-test.fibextelecom.info`
 - **Variables de Entorno y Credenciales:** `/home/freddy/Workspace/Desarrollo/iptv-load-balancer/.env`
+- **Regla de Compilación y Despliegue:** Para preparar la compilación (build de Composer/dependencias), **siempre** se debe utilizar el directorio `/tmp` en el servidor remoto para evitar la ejecución directa o bloqueos de permisos en caliente sobre la carpeta de producción del plugin.
 
 ---
 
