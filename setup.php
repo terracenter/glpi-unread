@@ -10,7 +10,7 @@
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Unreadtracker\Tracking;
 
-define('PLUGIN_UNREADTRACKER_VERSION', '1.1.0');
+define('PLUGIN_UNREADTRACKER_VERSION', '1.2.0');
 
 function plugin_version_unreadtracker()
 {
