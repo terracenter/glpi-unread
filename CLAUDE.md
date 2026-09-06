@@ -3,7 +3,7 @@
 > Plugin GLPI 10.x/11.x para rastreo de tickets no leídos. Stack y workflow
 > específicos. Reglas generales (idioma, git workflow, autoría) en LEY y AGENTS.
 
-@/home/freddy/Workspace/Obsidian/LEY_PRINCIPAL.md
+@/home/freddy/Workspace/Obsidian/99.LEY_PRINCIPAL.md
 @/home/freddy/Workspace/.agents/AGENTS.md
 @/home/freddy/Workspace/Desarrollo/AGENTS.md
 
