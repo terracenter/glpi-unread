@@ -116,7 +116,7 @@ CREATE TABLE `glpi_plugin_unreadtracker_read` (
 
 ## 📜 Licencia
 
-Ver archivo [LICENSE](LICENSE) (Community AGPL-3.0 / Enterprise Comercial).
+AGPL-3.0-or-later. Ver archivo [LICENSE](LICENSE).
 
 ---
 

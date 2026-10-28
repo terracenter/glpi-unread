@@ -3,7 +3,7 @@
  * GLPI Plugin Unread
  * Tracking unread tickets and updates for GLPI technicians
  *
- * @license GPLv3+
+ * @license AGPLv3+
  * @author Freddy Taborda & Team
  */
 
@@ -18,7 +18,7 @@ function plugin_version_unreadtracker()
         'name'           => 'Terracenter - Unread Tracker',
         'version'        => PLUGIN_UNREADTRACKER_VERSION,
         'author'         => 'Freddy Taborda & Team',
-        'license'        => 'GPLv3+',
+        'license'        => 'AGPLv3+',
         'homepage'       => 'https://github.com/terracenter/glpi-unread',
         'requirements'   => [
             'glpi' => ['min' => '10.0'],

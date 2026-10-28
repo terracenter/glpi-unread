@@ -1,3 +1,8 @@
+Sin publicar
+============
+Docs:
+  * Licencia aclarada como AGPL-3.0-or-later pura: se quita la mencion a una licencia Enterprise Comercial que no existe, y composer.json y setup.php dejan de declarar GPL.
+
 Plugin Unread 1.2.0 (2026-06-29)
 =================================
 New Features:
