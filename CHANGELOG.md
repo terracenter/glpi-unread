@@ -2,6 +2,7 @@ Sin publicar
 ============
 Docs:
   * Licencia aclarada como AGPL-3.0-or-later pura: se quita la mencion a una licencia Enterprise Comercial que no existe, y composer.json y setup.php dejan de declarar GPL.
+  * Regla unica de repo y vault: `CHANGES` pasa a `CHANGELOG.md`; se agregan `VERSION` (1.2.0), `README.en.md`, `SECURITY.md`, `CONTRIBUTING.md`, `ROADMAP.md`, `docs/`, plantillas de `.github/` y `.gitignore`; `CLAUDE.md` deja de versionarse y pasa al vault.
 
 Plugin Unread 1.2.0 (2026-06-29)
 =================================

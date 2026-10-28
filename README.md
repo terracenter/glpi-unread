@@ -3,7 +3,7 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![GLPI Version](https://img.shields.io/badge/GLPI-10.x%20|%2011.x-green.svg)](https://glpi-project.org/)
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B%20%2F%208.2%2B-blue.svg)](https://www.php.net/)
-[![Release](https://img.shields.io/badge/Release-1.2.0-brightgreen.svg)](CHANGES)
+[![Release](https://img.shields.io/badge/Release-1.2.0-brightgreen.svg)](CHANGELOG.md)
 
 Plugin para GLPI que implementa un **centro de notificaciones estilo Odoo** y rastreo de tickets **no leídos, actualizados y retrasados** con clasificación visual según la prioridad del ticket.
 

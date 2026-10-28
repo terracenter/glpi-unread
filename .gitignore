@@ -1,0 +1,38 @@
+# Local agent/internal files
+/CLAUDE.md
+/CLAUDE.es-VE.md
+/TASK_LOG.md
+/DEVELOPMENT_LOG.md
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Logs and databases
+*.log
+logs/
+*.db
+*.sqlite
+*.sqlite3
+
+# Build artifacts
+bin/
+build/
+dist/
+*.exe
+*.out
+*.test
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
